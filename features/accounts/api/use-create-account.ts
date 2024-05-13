@@ -21,6 +21,7 @@ export const useCreateAccount = () => {
     },
     onSuccess: () => {
       toast.success("Account created");
+      // Every time accounts created run "queryKey: ["accounts"]" to fetch the data
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
     },
     onError: () => {
