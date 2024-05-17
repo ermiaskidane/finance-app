@@ -3,7 +3,6 @@ import { Hono } from "hono";
 import { parse, subDays } from "date-fns";
 import { createId } from "@paralleldrive/cuid2";
 import { zValidator } from "@hono/zod-validator";
-import { HTTPException } from "hono/http-exception";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 
@@ -25,9 +24,7 @@ const app = new Hono()
     const { from, to, accountId } = c.req.valid("query");
 
     if (!auth?.userId) {
-      throw new HTTPException(401, {
-        res: c.json({ error: "Unauthorized" }, 401),
-      });
+        return c.json({ error: "Unauthorized" }, 401)
     }
 
     const defaultTo = new Date();
@@ -73,15 +70,11 @@ const app = new Hono()
     const { id } = c.req.valid("param");
 
     if (!id) {
-      throw new HTTPException(400, {
-        res: c.json({ error: "Bad Request" }, 400),
-      });
+        return c.json({ error: "Bad Request" }, 400)
     }
 
     if (!auth?.userId) {
-      throw new HTTPException(401, {
-        res: c.json({ error: "Unauthorized" }, 401),
-      });
+        return c.json({ error: "Unauthorized" }, 401)
     }
 
     const [data] = await db
@@ -102,9 +95,7 @@ const app = new Hono()
       ));
 
     if (!data) {
-      throw new HTTPException(404, {
-        res: c.json({ error: "Not Found" }, 404),
-      });
+        return c.json({ error: "Not Found" }, 404)
     }
       
     return c.json({ data });
@@ -123,9 +114,7 @@ const app = new Hono()
       const values = c.req.valid("json");
 
       if (!auth?.userId) {
-        throw new HTTPException(401, {
-          res: c.json({ error: "Unauthorized" }, 401),
-        });
+          return c.json({ error: "Unauthorized" }, 401)
       }
 
       const data = await db.insert(transactions).values({
@@ -152,9 +141,7 @@ const app = new Hono()
       const values = c.req.valid("json");
 
       if (!auth?.userId) {
-        throw new HTTPException(401, {
-          res: c.json({ error: "Unauthorized" }, 401),
-        });
+          return c.json({ error: "Unauthorized" }, 401)
       }
 
       const data = await db.insert(transactions).values(
@@ -181,9 +168,7 @@ const app = new Hono()
       const values = c.req.valid("json");
 
       if (!auth?.userId) {
-        throw new HTTPException(401, {
-          res: c.json({ error: "Unauthorized" }, 401),
-        });
+          return c.json({ error: "Unauthorized" }, 401)
       }
 
       const transactionsToDelete = db.$with('transactions_to_delete').as(
@@ -229,15 +214,11 @@ const app = new Hono()
       const values = c.req.valid("json");
 
       if (!auth?.userId) {
-        throw new HTTPException(401, {
-          res: c.json({ error: "Unauthorized" }, 401),
-        });
+          return c.json({ error: "Unauthorized" }, 401)
       }
 
       if (!id) {
-        throw new HTTPException(400, {
-          res: c.json({ error: "Bad Request" }, 400),
-        });
+          return c.json({ error: "Bad Request" }, 400)
       }
 
       const transactionsToUpdate = db.$with('transactions_to_update').as(
@@ -260,9 +241,7 @@ const app = new Hono()
         .returning();
 
       if (!data) {
-        throw new HTTPException(404, {
-          res: c.json({ error: "Not Found" }, 404),
-        });
+          return c.json({ error: "Not Found" }, 404)
       }
 
       return c.json({ data });
@@ -282,15 +261,11 @@ const app = new Hono()
       const { id } = c.req.valid("param");
 
       if (!auth?.userId) {
-        throw new HTTPException(401, {
-          res: c.json({ error: "Unauthorized" }, 401),
-        });
+          return c.json({ error: "Unauthorized" }, 401)
       }
 
       if (!id) {
-        throw new HTTPException(400, {
-          res: c.json({ error: "Bad Request" }, 400),
-        });
+          return c.json({ error: "Bad Request" }, 400)
       }
 
       const transactionsToDelete = db.$with('transactions_to_delete').as(
@@ -313,9 +288,7 @@ const app = new Hono()
         });
 
       if (!data) {
-        throw new HTTPException(404, {
-          res: c.json({ error: "Not Found" }, 404),
-        });
+          return c.json({ error: "Not Found" }, 404)
       }
 
       return c.json({ data });

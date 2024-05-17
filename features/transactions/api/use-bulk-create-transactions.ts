@@ -4,10 +4,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
 
-type ResponseType = InferResponseType<typeof client.api.categories[":id"]["$patch"]>;
-type RequestType = InferRequestType<typeof client.api.categories[":id"]["$patch"]>["json"];
+type ResponseType = InferResponseType<typeof client.api.transactions["bulk-create"]["$post"]>;
+type RequestType = InferRequestType<typeof client.api.transactions["bulk-create"]["$post"]>["json"];
 
-export const useEditCategory = (id?: string) => {
+export const useBulkCreateTransactions = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<
@@ -16,21 +16,18 @@ export const useEditCategory = (id?: string) => {
     RequestType
   >({
     mutationFn: async (json) => {
-      const response = await client.api.categories[":id"]["$patch"]({ 
-        param: { id },
-        json
-       });
+      const response = await client.api.transactions["bulk-create"]["$post"]({ json });
+      // since we are calling this as function we can chain with .$post
+      // const response = await client.api.transactions["bulk-create"].$post({ json });
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("category updated");
-      queryClient.invalidateQueries({ queryKey: ["category", { id }] });
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      toast.success("Transaction deleted");
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       // queryClient.invalidateQueries({ queryKey: ["summary"] });
     },
     onError: () => {
-      toast.error("Failed to edit an category");
+      toast.error("Failed to delete transactions");
     }
   });
 
