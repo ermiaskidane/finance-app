@@ -22,7 +22,7 @@ export const useBulkCreateTransactions = () => {
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Transaction deleted");
+      toast.success("Bulk Transaction created");
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       // queryClient.invalidateQueries({ queryKey: ["summary"] });
     },

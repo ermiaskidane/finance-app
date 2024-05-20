@@ -75,6 +75,7 @@ export const columns: ColumnDef<ResponseType>[] = [
       )
     },
     cell: ({ row }) => {
+      // console.log("row", row)
       return (
         <CategoryColumn
           id={row.original.id}

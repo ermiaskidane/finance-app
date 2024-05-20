@@ -1,7 +1,8 @@
 "use client";
 
+import { toast } from "sonner";
 import { Loader2, Plus } from "lucide-react";
-
+import { transactions } from "@/db/schema";
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 
 import {
@@ -23,6 +24,7 @@ import { useGetTransactions } from "@/features/transactions/api/use-get-transact
 import { useState } from "react";
 import { UploadButton } from "./upload-button";
 import { ImportCard } from "./import-card";
+import { useSelectAccount } from "@/features/accounts/hooks/use-select-account";
 
 enum VARIANTS {
   LIST = "LIST",
@@ -35,6 +37,14 @@ const TransactionsPage = () => {
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
 
+  const [AccountDialog, confirm] = useSelectAccount();
+
+  const { onOpen } = useNewTransaction();
+  const bulkCreateMutation = useBulkCreateTransactions();
+  const bulkDeleteMutation = useBulkDeleteTransactions();
+  const transactionsQuery = useGetTransactions();
+  const transactionsData = transactionsQuery.data || [];
+
   const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
     console.log(results)
     setImportResults(results);
@@ -46,16 +56,30 @@ const TransactionsPage = () => {
     setVariant(VARIANTS.LIST);
   };
   
-  const { onOpen } = useNewTransaction();
-  const bulkCreateMutation = useBulkCreateTransactions();
-  const bulkDeleteMutation = useBulkDeleteTransactions();
-  const transactionsQuery = useGetTransactions();
-  const transactionsData = transactionsQuery.data || [];
 
 
   const isDisabled =
     transactionsQuery.isLoading || 
     bulkDeleteMutation.isPending;
+
+  const onSubmitImport = async (values: typeof transactions.$inferInsert[]) => {
+    const accountId = await confirm();
+
+    if (!accountId) {
+      return toast.error("Please select an account to continue.");
+    }
+
+    const data = values.map((value) => ({ 
+      ...value, 
+      accountId: accountId as string
+    }));
+
+    bulkCreateMutation.mutate(data, {
+      onSuccess: () => {
+        onCancelImport();
+      }
+    });
+  };
 
   if (transactionsQuery.isLoading) {
     return (
@@ -77,12 +101,11 @@ const TransactionsPage = () => {
   if (variant === VARIANTS.IMPORT) {
     return (
       <>
-      <h1>this is for UploadButton</h1>
-        {/* <AccountDialog /> */}
+        <AccountDialog />
         <ImportCard
           data={importResults.data}
           onCancel={onCancelImport}
-          onSubmit={() => {}}
+          onSubmit={onSubmitImport}
         />
       </>
     );

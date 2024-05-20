@@ -43,6 +43,7 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
   const onTableHeadSelectChange = (columnIndex: number, value: string | null) => {
     setSelectedColumns(prev => {
       const newSelectedColumns = {...prev};
+      console.log("dfs", newSelectedColumns)
       for (const key in newSelectedColumns) {
         if (newSelectedColumns[key] === value) {
           newSelectedColumns[key] = null;
@@ -102,7 +103,7 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
 
     console.log("@@@@@@@@@@@@@", formattedData)
 
-    // onSubmit(formattedData);
+    onSubmit(formattedData);
   };
 
   return (
