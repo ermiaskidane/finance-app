@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useNewAccount } from "@/features/accounts/hooks/use-new-account";
-import { DataGrid } from "@/components/data-grid";
+import { DataGrid } from "@/components/overview/data-grid";
+import { DataCharts } from "@/components/overview/data-charts";
 // import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
   return (
     <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
       <DataGrid />
-      {/* <DataCharts /> */}
+      <DataCharts />
     </div>
   )
 }

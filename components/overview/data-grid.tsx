@@ -4,7 +4,7 @@ import { FaPiggyBank } from "react-icons/fa";
 import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
 import { formatDateRange } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
-import { DataCard, DataCardLoading } from "@/components/data-card";
+import { DataCard, DataCardLoading } from "@/components/overview/data-card";
 import { useGetSummary } from "@/features/summary/api/use-get-summary";
 
 export const DataGrid = () => {
