@@ -6,9 +6,8 @@ import { PlaidConnect } from "@/features/plaid/components/plaid-connect";
 import { PlaidDisconnect } from "@/features/plaid/components/plaid-disconnect";
 import { useGetConnectedBank } from "@/features/plaid/api/use-get-connected-bank";
 
-// import { useGetSubscription } from "@/features/subscriptions/api/use-get-subscription";
-// import { SubscriptionPortal } from "@/features/subscriptions/components/subscription-portal";
-// import { SubscriptionCheckout } from "@/features/subscriptions/components/subscription-checkout";
+import { useGetSubscription } from "@/features/subscriptions/api/use-get-subscription";
+import { SubscriptionCheckout } from "@/features/subscriptions/components/subscription-checkout";
 
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,13 +22,12 @@ export const SettingsCard = () => {
 
    console.log("3eqwer", connectedBank)
 
-  // const {
-  //   data: subscription,
-  //   isLoading: isLoadingSubscription,
-  // } = useGetSubscription();
+  const {
+    data: subscription,
+    isLoading: isLoadingSubscription,
+  } = useGetSubscription();
 
-  // if (isLoadingConnectedBank || isLoadingSubscription) {
-    if (isLoadingConnectedBank) {
+  if (isLoadingConnectedBank || isLoadingSubscription) {
     return <SettingsCardLoading />;
   };
 
@@ -42,41 +40,44 @@ export const SettingsCard = () => {
       </CardHeader>
       <CardContent>
         <Separator />
-        <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center py-4">
+        <div className="flex flex-col gap-y-2 lg:flex-row items-center py-4">
           <p className="text-sm font-medium w-full lg:w-[16.5rem]">
             Bank account
           </p>
           <div className="w-full flex items-center justify-between">
             <div className={cn(
               "text-sm truncate flex items-center",
-              !connectedBank && "text-muted-foreground"
+              !connectedBank && "text-muted-foreground",
             )}>
-              {connectedBank 
-                ? "Bank account connected" 
+              {connectedBank
+                ? "Bank account connected"
                 : "No bank account connected"
               }
             </div>
-            {connectedBank ? <PlaidDisconnect /> : <PlaidConnect />}
+            {connectedBank
+              ? <PlaidDisconnect />
+              : <PlaidConnect />
+            }
           </div>
         </div>
         <Separator />
-        {/* <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center py-4">
+        <div className="flex flex-col gap-y-2 lg:flex-row items-center py-4">
           <p className="text-sm font-medium w-full lg:w-[16.5rem]">
             Subscription
           </p>
           <div className="w-full flex items-center justify-between">
             <div className={cn(
               "text-sm truncate flex items-center",
-              !subscription && "text-muted-foreground"
+              !subscription && "text-muted-foreground",
             )}>
               {subscription
-                ? `Subscription ${subscription.status}` 
+                ? `Subscription ${subscription.status}`
                 : "No subscription active"
               }
             </div>
-            {subscription ? <SubscriptionPortal /> : <SubscriptionCheckout />}
+            <SubscriptionCheckout />
           </div>
-        </div> */}
+        </div>
       </CardContent>
     </Card>
   );

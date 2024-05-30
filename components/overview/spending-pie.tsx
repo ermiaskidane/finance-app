@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FileSearch, Loader2, PieChart, Radar, Target } from "lucide-react";
 
-// import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
+import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { PieVariant } from "@/components/overview/pie-variant";
@@ -28,13 +28,13 @@ type Props = {
 export const SpendingPie = ({ data = [] }: Props) => {
   const [chartType, setChartType] = useState("pie");
 
-  // const { shouldBlock, triggerPaywall } = usePaywall();
+  const { shouldBlock, triggerPaywall } = usePaywall();
 
   const onTypeChange = (type: string) => {
-    // if (type !== "pie" && shouldBlock) {
-    //   triggerPaywall();
-    //   return;
-    // }
+    if (type !== "pie" && shouldBlock) {
+      triggerPaywall();
+      return;
+    }
 
     setChartType(type);
   };

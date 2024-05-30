@@ -10,17 +10,9 @@ import summary from "./summary";
 import plaid from "./plaid";
 import subscriptions from "./subscriptions";
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api')
-
-// app.onError((err, c) => {
-//   if (err instanceof HTTPException) {
-//     return err.getResponse();
-//   }
-
-//   return c.json({ error: "Internal server error" }, 500);
-// });
 
 const routes = app
   .route("/accounts", accounts)
